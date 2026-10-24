@@ -47,38 +47,33 @@ int _write(int file, char *ptr, int len)
 int main(void)
 {
   if (mx_system_init() != SYSTEM_OK)
-  {
     return (-1);
-  }
-  else
-  {
-    printf("Mounting...\n");
-    fresult = f_mount(&fs, "", 1);
-
-    if (fresult == FR_OK) {
-      printf("Mounted...\n");
-      printf("Opening...\n");
-      fresult = f_open(&file, "index.txt", FA_READ);
     
-      if (fresult == FR_OK) {
+  
+  printf("Mounting...\n");
+  fresult = f_mount(&fs, "", 1);
 
-        printf("Opened...\n");
-        f_read(&file, read_data, sizeof(read_data)-1, &br);
-        printf("Read %u bytes...\n", br);
-        read_data[br] = '\0'; // Always null-terminate strings
-        printf("Closed String...\n");
-        f_close(&file);
-        printf("Closed file...\n");
+  if (fresult == FR_OK) {
+    printf("Mounted...\n");
+    printf("Opening...\n");
+    fresult = f_open(&file, "index.txt", FA_READ);
+  
+    if (fresult == FR_OK) {
+      //printf("Opened...\n");
+      f_read(&file, read_data, sizeof(read_data)-1, &br);
+      //printf("Read %u bytes...\n", br);
+      read_data[br] = '\0'; // Always null-terminate strings
+      //printf("Closed String...\n");
+      f_close(&file);
+      //printf("Closed file...\n");
 
-        printf("%s\n", read_data);
-      }
-    } else {
-      printf("No mounty\n");
+      printf("%s\n", read_data);
     }
+  } else {
+    printf("No mounty\n");
+  }
 
-    while (1) {
-      HAL_Delay(1000);
-    }
+  while (1) {
+    HAL_Delay(1000);
   }
 } /* end main */
-

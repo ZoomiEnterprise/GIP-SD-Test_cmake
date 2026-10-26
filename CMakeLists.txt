@@ -8,7 +8,7 @@ set(CMAKE_CXX_COMPILER_FORCED TRUE)
 include(cmake/target.cmake)
 include(cmake/${TOOLCHAIN_FILE})
 
-project(GIP-SD-Test)
+project(GIP-SD-Test C CXX)
 add_executable(GIP-SD-Test)
 include(cmake/files.cmake)
 include(cmake/flags.cmake)
@@ -25,11 +25,14 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
     "./generated/hal/mx_hal_def.h"
 
+    "SdCard/sd.h"
+    "SdCard/sd.c"
 )
 
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC
   # Add additional include directories here
   "middleware/Third_Party/FatFs"
+  "SdCard"
 )
 
 target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC

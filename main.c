@@ -18,18 +18,14 @@
 #include "main.h"
 #include "mx_usart2.h"
 #include "stdio.h"
-#include "ff.h"
 #include "fat_sd_spi.h"
 #include "stm32c5xx_hal_spi.h"
 #include "mx_spi1.h"
 #include "stm32c5xx_hal_uart.h"
+#include "sd.h"
+#include <stdlib.h>
 
-FATFS fs;
-FIL file;
-FRESULT fresult;
-UINT br, bw;
-
-static char read_data[256];
+sdcard_t card;
 
 /* Serial Port */
 int _write(int file, char *ptr, int len)
@@ -48,30 +44,38 @@ int main(void)
 {
   if (mx_system_init() != SYSTEM_OK)
     return (-1);
-    
-  
-  printf("Mounting...\n");
-  fresult = f_mount(&fs, "", 1);
 
-  if (fresult == FR_OK) {
-    printf("Mounted...\n");
-    printf("Opening...\n");
-    fresult = f_open(&file, "index.txt", FA_READ);
-  
-    if (fresult == FR_OK) {
-      //printf("Opened...\n");
-      f_read(&file, read_data, sizeof(read_data)-1, &br);
-      //printf("Read %u bytes...\n", br);
-      read_data[br] = '\0'; // Always null-terminate strings
-      //printf("Closed String...\n");
-      f_close(&file);
-      //printf("Closed file...\n");
+  SDCard(&card);
 
-      printf("%s\n", read_data);
-    }
-  } else {
-    printf("No mounty\n");
-  }
+  // read test
+  printf("\nRead Test;\n");
+  uint8_t* data = malloc(128*sizeof(uint8_t));
+  readBytes(&card, "index.txt", data, 127, 0);
+  data[card.br] = '\n';
+  data[card.br+1] = '\0';
+  printf((char*)data);
+  readBytes(&card, "index.txt", data, 127, 127);
+  data[card.br] = '\n';
+  data[card.br+1] = '\0';
+  printf((char*)data);
+
+  // write test
+  printf("\nWrite Test;\n");
+  uint8_t* wdata = "La di dada la ti dada la ti dada day, ladidada day!";
+  writeBytes(&card, "day.txt", wdata, 52, 0);
+
+  //append test
+  printf("\nAppend Test;\n");
+  uint8_t* adata = "\ncuz i may not have a home, but that's way okay.";
+  appendBytes(&card, "day.txt", adata, 48);
+
+  // delete test
+  printf("\nDelete Test;\n");
+  deleteFile(&card, "dayFNE.txt");
+
+  //append test - no file
+  printf("\nAppend Test; NOF\n");
+  appendBytes(&card, "dayNOF.txt", adata, 48);
 
   while (1) {
     HAL_Delay(1000);

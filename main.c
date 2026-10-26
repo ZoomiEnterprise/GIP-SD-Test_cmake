@@ -71,7 +71,7 @@ int main(void)
 
   // delete test
   printf("\nDelete Test;\n");
-  deleteFile(&card, "dayFNE.txt");
+  deleteFile(&card, "dayNOF.txt");
 
   //append test - no file
   printf("\nAppend Test; NOF\n");

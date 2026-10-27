@@ -21,6 +21,34 @@ void deleteFile(sdcard_t *card, char *path) { // werkt nog niet
     }
 }
 
+void mkdir(sdcard_t* card, char* path) {
+    if (card == NULL) { // check of de sdcard_t valid is
+        printf("Card is NULL;\n");
+        return;
+    }
+
+    card->result = f_mkdir(path);
+    if (card->result != FR_OK){ // fout
+        printf("Create Error; %d\n", card->result);
+        return;
+    }
+    f_close(&(card->file));
+}
+
+void touch(sdcard_t* card, char* path) {
+if (card == NULL) { // check of de sdcard_t valid is
+        printf("Card is NULL;\n");
+        return;
+    }
+
+    card->result = f_open(&(card->file), path, FA_OPEN_ALWAYS);
+    if (card->result != FR_OK){ // fout
+        printf("Create Error; %d\n", card->result);
+        return;
+    }
+    f_close(&(card->file));
+}
+
 void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset) {
     if (card == NULL) { // check of de sdcard_t valid is
         printf("Card is NULL;\n");

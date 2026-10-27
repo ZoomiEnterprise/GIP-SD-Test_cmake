@@ -72,10 +72,20 @@ int main(void)
   // delete test
   printf("\nDelete Test;\n");
   deleteFile(&card, "dayNOF.txt");
+  deleteFile(&card, "createdDir/touchedFile.txt");
+  deleteFile(&card, "createdDir");
 
-  //append test - no file
+  // append test - no file
   printf("\nAppend Test; NOF\n");
   appendBytes(&card, "dayNOF.txt", adata, 48);
+
+  // mkdir test
+  printf("\nMkdir Test;\n");
+  mkdir(&card, "createdDir");
+
+  // touch test
+  printf("\nTouch Test;\n");
+  touch(&card, "createdDir/touchedFile.txt");
 
   while (1) {
     HAL_Delay(1000);

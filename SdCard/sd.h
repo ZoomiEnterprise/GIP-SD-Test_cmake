@@ -18,6 +18,10 @@ void SDCard(sdcard_t* card);
 
 void deleteFile(sdcard_t* card, char* path);
 
+void mkdir(sdcard_t* card, char* path);
+
+void touch(sdcard_t* card, char* path);
+
 void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset);
 
 void writeBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset);

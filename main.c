@@ -24,8 +24,10 @@
 #include "stm32c5xx_hal_uart.h"
 #include "sd.h"
 #include <stdlib.h>
+#include <time.h>
 
 sdcard_t card;
+uint8_t buffer[512];
 
 /* Serial Port */
 int _write(int file, char *ptr, int len)
@@ -47,45 +49,22 @@ int main(void)
 
   SDCard(&card);
 
-  // read test
-  printf("\nRead Test;\n");
-  uint8_t* data = malloc(128*sizeof(uint8_t));
-  readBytes(&card, "index.txt", data, 127, 0);
-  data[card.br] = '\n';
-  data[card.br+1] = '\0';
-  printf((char*)data);
-  readBytes(&card, "index.txt", data, 127, 127);
-  data[card.br] = '\n';
-  data[card.br+1] = '\0';
-  printf((char*)data);
+  // stream read test
+  printf("ShadowAssasin.mp3 Reading...\n");
+  unsigned long offset = 0;
+  int eof = 0;
 
-  // write test
-  printf("\nWrite Test;\n");
-  uint8_t* wdata = "La di dada la ti dada la ti dada day, ladidada day!";
-  writeBytes(&card, "day.txt", wdata, 52, 0);
+  f_open(&(card.file), "songs/ShadowAssasin.mp3", FA_READ);
 
-  //append test
-  printf("\nAppend Test;\n");
-  uint8_t* adata = "\ncuz i may not have a home, but that's way okay.";
-  appendBytes(&card, "day.txt", adata, 48);
+  while(eof==0) {
+    f_read(&(card.file), buffer, 512, &(card.br));
+    //printf(buffer);
+    if (card.br < 512)
+      eof = 1;
+  }
 
-  // delete test
-  printf("\nDelete Test;\n");
-  deleteFile(&card, "dayNOF.txt");
-  deleteFile(&card, "createdDir/touchedFile.txt");
-  deleteFile(&card, "createdDir");
-
-  // append test - no file
-  printf("\nAppend Test; NOF\n");
-  appendBytes(&card, "dayNOF.txt", adata, 48);
-
-  // mkdir test
-  printf("\nMkdir Test;\n");
-  mkdir(&card, "createdDir");
-
-  // touch test
-  printf("\nTouch Test;\n");
-  touch(&card, "createdDir/touchedFile.txt");
+  f_close(&(card.file));
+  printf("\nFile played; EOF\n");
 
   while (1) {
     HAL_Delay(1000);

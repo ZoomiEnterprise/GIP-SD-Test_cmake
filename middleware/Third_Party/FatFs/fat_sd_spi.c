@@ -15,7 +15,7 @@ static void spi_set_speed(enum sd_speed speed)
     // By using the system macro SPI1, we completely bypass the unconfigured 'static hSPI1'
     SPI_TypeDef *p_spi_hardware = SPI1; 
 
-    uint32_t prescaler = HAL_SPI_BAUD_RATE_PRESCALER_128; // Default high speed
+    uint32_t prescaler = HAL_SPI_BAUD_RATE_PRESCALER_4; // Default high speed
 
     if (speed == SD_SPEED_400KHZ) {
         prescaler = HAL_SPI_BAUD_RATE_PRESCALER_256;    // Safe slow startup clock
@@ -32,8 +32,7 @@ static void spi_set_speed(enum sd_speed speed)
 }
 
 
-static uint8_t spi_txrx(uint8_t data)
-{
+static uint8_t spi_txrx(uint8_t data) {
     uint8_t rx_data = 0xFF;
     hal_spi_handle_t *p_hspi1 = mx_spi1_gethandle();
 
@@ -54,7 +53,7 @@ static uint8_t spi_txrx(uint8_t data)
     }
     
     return rx_data;
-}
+} 
 
 
 

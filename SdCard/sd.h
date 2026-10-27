@@ -22,7 +22,7 @@ void mkdir(sdcard_t* card, char* path);
 
 void touch(sdcard_t* card, char* path);
 
-void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset);
+void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset, int noFile);
 
 void writeBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset);
 

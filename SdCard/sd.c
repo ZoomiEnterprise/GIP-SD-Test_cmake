@@ -49,17 +49,19 @@ if (card == NULL) { // check of de sdcard_t valid is
     f_close(&(card->file));
 }
 
-void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset) {
+void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset, int noFile) {
     if (card == NULL) { // check of de sdcard_t valid is
         printf("Card is NULL;\n");
         return;
     }
 
-    // open het bestand
-    card->result = f_open(&card->file, path, FA_READ);
-    if (card->result != FR_OK){ // fout
-        printf("Open Error; %d\n", card->result);
-        return;
+    if (!noFile) {
+        // open het bestand
+        card->result = f_open(&card->file, path, FA_READ);
+        if (card->result != FR_OK){ // fout
+            printf("Open Error; %d\n", card->result);
+            return;
+        }
     }
 
     // zoek de offset
@@ -74,7 +76,10 @@ void readBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLen
     if (card->result != FR_OK) { // fout
         printf("Read Error: %d\n", card->result); // het bestand moet hier niet vroegtijdig gesloten worden omdat dat ongeacht het resultaat al gebeurt.
     }
-    f_close(&(card->file));
+
+    if(!noFile) {
+        f_close(&(card->file));
+    }
 }
 
 void writeBytes(sdcard_t* card, char* path, uint8_t* buffer, unsigned long bufLength, unsigned long offset) {
